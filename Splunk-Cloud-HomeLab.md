@@ -16,7 +16,7 @@ This documentation outlines the process of configuring **Splunk Cloud** to recei
 - Expanding knowledge in **cloud security services (AWS CloudWatch & CloudTrail)**.  
 
 ## Project walk-through
-This section provides a step-by-step breakdown of the steps taken in order to carry out this fundemental project with Splunk.
+This section provides a step-by-step breakdown of the steps taken in order to carry out this fundemental project with Splunk. The Splunk Cloud instance will act as the Indexer and the Search Head in our setup.
 
 ### 1. Configure Universal Forwader on Windows End-Point
 In this section, I explain how I configured a Universal Forwarder on our EC2 instance running windows. 
