@@ -84,11 +84,65 @@ pwd
 /home/splunkadmin
 ```
 
+- Since we set a password for splunkadmin, an entry now exists in /etc/shadow, ensuring password-based authentication is active
 - With our admin setup, I will now proceed to configure the Universal Forwarder on our linux machine.
 
 ### 2.2. Linux universal forwarder
+- Here I navigated to the Splunk Universal Forwarder download page, and copied the wget link for the .deb package. Ill run this on our Linux machine directly.
 
+<img width="1293" alt="image" src="https://github.com/user-attachments/assets/f65cc74c-e8fc-4206-bf74-caaade3b2478" />
 
+```
+ls -l
+total 96712
+-rw-rw-r-- 1 splunkadmin splunkadmin 99029222 Feb 25 20:07 splunkforwarder-9.4.1-e3bdab203ac8-linux-amd64.deb
+```
+
+```
+sudo dpkg -i splunkforwarder-9.4.1-e3bdab203ac8-linux-amd64.deb
+[sudo] password for splunkadmin:
+Selecting previously unselected package splunkforwarder.
+(Reading database ... 70610 files and directories currently installed.)
+Preparing to unpack splunkforwarder-9.4.1-e3bdab203ac8-linux-amd64.deb ...
+no need to run the pre-install check
+Unpacking splunkforwarder (9.4.1) ...
+Setting up splunkforwarder (9.4.1) ...
+find: ‘/opt/splunkforwarder/lib/python3.7/site-packages’: No such file or directory
+find: ‘/opt/splunkforwarder/lib/python3.9/site-packages’: No such file or directory
+complete
+```
+
+- To finish the configuration, I changed the owner of Splunk UF to our splunkadmin.
+
+```
+ls -l
+total 4
+drwxr-xr-x 9 splunkfwd splunkfwd 4096 Mar 15 16:26 splunkforwarder
+sudo chown -R splunkadmin:splunkadmin /opt/splunkforwarder
+ls -l
+total 4
+drwxr-xr-x 9 splunkadmin splunkadmin 4096 Mar 15 16:26 splunkforwarder
+```
+
+- Then I enabled Splunk UF to start on boot
+
+```
+sudo /opt/splunkforwarder/bin/splunk enable boot-start -user splunkadmin
+```
+
+**Encountered Issue**: Splunk UF is running as a non-root user (splunkadmin), and non-root users cannot manage systemd services.
+
+<img width="619" alt="image" src="https://github.com/user-attachments/assets/f48d72e7-786f-4c94-9466-f69ccb355172" />
+
+- However, our splunkadmin user and group was infact added. I am doing this for the first time, so it is good to encounter problems and try to diagnose them. 
+
+```
+sudo vi /etc/systemd/system/SplunkForwarder.service
+```
+
+<img width="909" alt="image" src="https://github.com/user-attachments/assets/49b92b6e-4d03-4d1c-9fd2-0f8a9332d1f3" />
+
+- 
 
 
 
