@@ -62,12 +62,32 @@ In this section, I explain how I configured a Universal Forwarder on an EC2 inst
 In this section, I explain how I configured a Universal Forwarder on an EC2 instance running Linux Ubuntu. This instance was also setup before hand in an isolated VPC and subnet, with security group rules to allow only ssh access from my IP address.
 
 ### 2.1. Configure a new admin user
-For our Linux instance, I decided to create a new dedicated admin user (splunkadmin) instead of the default ubuntu user. This was mostly to gain more experience with Linux user management, but also is a good security practice instead of directly using the default system user for administrative tasks. 
+For our Linux instance, I decided to create a new dedicated admin user (splunkadmin) instead of the default ubuntu user. This was mostly to gain more experience with Linux user management, but also is a good security practice instead of directly using the default system user for administrative tasks. By default we do not ssh as the root user, and also the root user should only be used sparingly, as anything that is typed can be executed. 
 
-- 
+- Creating our dedicated splunkadmin user
 
+```
+sudo useradd -m -s /bin/bash splunkadmin
+sudo passwd splunkadmin
+New password:
+Retype new password:
+passwd: password updated successfully
+sudo usermod -aG sudo splunkadmin
+su - splunkadmin
+Password:
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+whoami
+splunkadmin
+pwd
+/home/splunkadmin
+```
+
+- With our admin setup, I will now proceed to configure the Universal Forwarder on our linux machine.
 
 ### 2.2. Linux universal forwarder
+
 
 
 
