@@ -19,7 +19,8 @@ This documentation outlines the process of configuring **Splunk Cloud** to recei
 This section provides a step-by-step breakdown of the steps taken in order to carry out this fundemental project with Splunk. The Splunk Cloud instance will act as the Indexer and the Search Head in our setup.
 
 ### 1. Configure Universal Forwader on Windows End-Point
-In this section, I explain how I configured a Universal Forwarder on our EC2 instance running windows. 
+In this section, I explain how I configured a Universal Forwarder on an EC2 instance running windows. Setup of this EC2 instance was done before hand, which has been configured in an isolated VPC and subnet, with security group rules to allow only RDP access from my IP address.
+
 - On my windows VM, I set up a new account on Splunk and launched the Splunk Cloud Platform as an administrator.
 - Once logged in, I went to **Universal Forwarder** on the left hand side, and downloaded the customised universal forwarder credentials package. This package ensures a secure and authenticated connection between our end points, and the splunk cloud platform.
 
@@ -58,5 +59,19 @@ In this section, I explain how I configured a Universal Forwarder on our EC2 ins
 - I have now configured an AWS EC2 Windows instance to simulate an endpoint used by an end-user for daily tasks. The Splunk Universal Forwarder (UF) is installed on this instance to continuously collect and forward log data—including system events and user activity—directly to Splunk Cloud.
 
 ### 2. Configure Universal Forwader on Linux End-Point
+In this section, I explain how I configured a Universal Forwarder on an EC2 instance running Linux Ubuntu. This instance was also setup before hand in an isolated VPC and subnet, with security group rules to allow only ssh access from my IP address.
+
+### 2.1. Configure a new admin user
+For our Linux instance, I decided to create a new dedicated admin user (splunkadmin) instead of the default ubuntu user. This was mostly to gain more experience with Linux user management, but also is a good security practice instead of directly using the default system user for administrative tasks. 
+
+- 
+
+
+### 2.2. Linux universal forwarder
+
+
+
+
+
 
 ### 3. Carry out basic searches
