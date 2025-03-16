@@ -193,6 +193,35 @@ Configured but inactive forwards:
 	None
 ```
 
+- Now I configured the linux UF to monitor /var/log/syslog and /var/log/auth.log. As we are not using a deployment server (splunk enterprise feature), we need to configure this manually in our cloud setup.
+
+```
+sudo tee /opt/splunkforwarder/etc/system/local/inputs.conf > /dev/null <<EOL
+[monitor:///var/log/syslog]
+index = linux_logs
+sourcetype = syslog
+
+[monitor:///var/log/auth.log]
+index = linux_logs
+sourcetype = linux:auth
+EOL
+```
+
+```
+cat /opt/splunkforwarder/etc/system/local/inputs.conf
+[monitor:///var/log/syslog]
+index = linux_logs
+sourcetype = syslog
+
+[monitor:///var/log/auth.log]
+index = linux_logs
+sourcetype = linux:auth
+```
+
+```
+sudo systemctl restart SplunkForwarder
+```
+
 
 
 
