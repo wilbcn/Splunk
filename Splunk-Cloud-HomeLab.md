@@ -222,6 +222,15 @@ sourcetype = linux:auth
 sudo systemctl restart SplunkForwarder
 ```
 
+```
+Monitored Files:
+	$SPLUNK_HOME/etc/splunk.version
+	/var/log/auth.log
+	/var/log/syslog
+```
+
+- Lets check in our Splunk Cloud platform.
+
 
 
 
