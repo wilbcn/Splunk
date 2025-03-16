@@ -229,9 +229,21 @@ Monitored Files:
 	/var/log/syslog
 ```
 
-- Lets check in our Splunk Cloud platform.
+- In my cloud platform, I then added a new index for "linux_logs".
+
+![image](https://github.com/user-attachments/assets/6fc3b53f-8d83-4296-91db-364602e85fb4)
+
+- This is working as expected!
+
+![image](https://github.com/user-attachments/assets/d206daa1-b7ce-4f08-a14f-b4dbdf5c0fa5)
+
+### 3. Carrying out basic searches
+The goal of this project was to develop a fundamental understanding of log collection, forwarding, and searching within Splunk Cloud. Now that our Windows and Linux instances are successfully sending logs, we can begin exploring basic SPL queries.
 
 
 
 
-### 3. Carry out basic searches
+
+
+
+
