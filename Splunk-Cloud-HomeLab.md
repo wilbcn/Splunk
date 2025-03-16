@@ -146,18 +146,6 @@ sudo systemctl status SplunkForwarder
      CGroup: /system.slice/SplunkForwarder.service
              ├─623 splunkd --under-systemd --systemd-delegate=no -p 8089 _internal_launch_under_systemd
              └─917 "[splunkd pid=623] splunkd --under-systemd --systemd-delegate=no -p 8089 _internal_launch_under_systemd [process-runner]"
-
-Mar 15 17:12:28 ip-10-0-0-10 splunk[623]:                 Creating: /opt/splunkforwarder/var/lib/splunk/authDb
-Mar 15 17:12:28 ip-10-0-0-10 splunk[623]:                 Creating: /opt/splunkforwarder/var/lib/splunk/hashDb
-Mar 15 17:12:28 ip-10-0-0-10 splunk[623]:                 Creating: /opt/splunkforwarder/var/run/splunk/collect
-Mar 15 17:12:28 ip-10-0-0-10 splunk[623]:                 Creating: /opt/splunkforwarder/var/run/splunk/sessions
-Mar 15 17:12:28 ip-10-0-0-10 splunk[623]:         Checking conf files for problems...
-Mar 15 17:12:28 ip-10-0-0-10 splunk[623]:         Done
-Mar 15 17:12:28 ip-10-0-0-10 splunk[623]:         Checking default conf files for edits...
-Mar 15 17:12:28 ip-10-0-0-10 splunk[623]:         Validating installed files against hashes from '/opt/splunkforwarder/splunkforwarder-9.4.1-e3bdab203ac8-linux-amd64-manifest'
-Mar 15 17:12:29 ip-10-0-0-10 splunk[623]: PYTHONHTTPSVERIFY is set to 0 in splunk-launch.conf disabling certificate validation for the httplib and urllib libraries shipped with the embedded Python interp>
-Mar 15 17:12:29 ip-10-0-0-10 splunk[623]: 2025-03-15 17:12:29.056 +0000 splunkd started (build e3bdab203ac8) pid=623
-lines 1-22/22 (END)
 ```
 
 - I also verified Splunk UF is Enabled on Boot
@@ -167,7 +155,43 @@ sudo systemctl is-enabled SplunkForwarder
 enabled
 ```
 
+### 2.3. Install the credentials package
+- Firstly I went and downloaded the credentials package from my Splunk Cloud Platform. I then transferred the package to our Linux instance.
 
+```
+ls -l
+total 96720
+-rw-r--r-- 1 splunkadmin splunkadmin     6723 Mar 16 11:11 splunkclouduf.spl
+```
+
+- Now to install the package and restart the forwarder.
+
+```
+sudo /opt/splunkforwarder/bin/splunk install app /home/splunkadmin/splunkclouduf.spl
+Warning: Attempting to revert the SPLUNK_HOME ownership
+Warning: Executing "chown -R splunkadmin:splunkadmin /opt/splunkforwarder"
+Splunk username: uf_admin
+Password:
+App '/home/splunkadmin/splunkclouduf.spl' installed
+You need to restart the Splunk Server (splunkd) for your changes to take effect.
+/opt/splunkforwarder/bin$ sudo systemctl restart SplunkForwarder
+/opt/splunkforwarder/bin$
+```
+
+- Check that Splunk UF is successfully forwarding logs to Splunk Cloud. Also note that no inactive forwarders are listed!
+
+```
+sudo /opt/splunkforwarder/bin/splunk list forward-server
+Warning: Attempting to revert the SPLUNK_HOME ownership
+Warning: Executing "chown -R splunkadmin:splunkadmin /opt/splunkforwarder"
+Your session is invalid.  Please login.
+Splunk username: uf_admin
+Password:
+Active forwards:
+	inputs.prd-p-mw2cn.splunkcloud.com:9997 (ssl)
+Configured but inactive forwards:
+	None
+```
 
 
 
