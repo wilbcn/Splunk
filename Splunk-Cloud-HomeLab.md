@@ -240,6 +240,37 @@ Monitored Files:
 ### 3. Carrying out basic searches
 The goal of this project was to develop a fundamental understanding of log collection, forwarding, and searching within Splunk Cloud. Now that our Windows and Linux instances are successfully sending logs, we can begin exploring basic SPL queries.
 
+### 3.1. Detecting incorrect logins (Linux)
+To simulate real-world attack scenarios, I attempted to log into our Linux machine using several **non-existent usernames**. This generated logs that are useful for investigating potential **enumeration attacks**, where an attacker systematically attempts different usernames to discover valid accounts.
+
+By searching for **failed login attempts with invalid users**, we can detect **unauthorized access attempts** and take action to harden authentication security.
+
+```
+index=linux_logs "Invalid user"
+```
+
+![image](https://github.com/user-attachments/assets/7f1f3c81-98cf-4308-96fe-7844bc6cf701)
+
+- Future expansion: Set up Splunk alerts to notify administrators when multiple failed login attempts occur within a short time frame.
+
+### 3.2 Correct logins
+After testing incorrect login attempts, I also wanted to verify that our Universal Forwarder is capturing successful SSH logins.
+
+```
+index=linux_logs "session opened"
+```
+
+![image](https://github.com/user-attachments/assets/3096a29a-9f3b-4fbb-8ad0-f5adec17252a)
+
+```
+index=linux_logs "session opened" OR "session closed"
+```
+
+![image](https://github.com/user-attachments/assets/8e6edc8a-2774-438f-b516-6972e15020fa)
+
+### 4. Takeaways and follow up projects
+
+
 
 
 
