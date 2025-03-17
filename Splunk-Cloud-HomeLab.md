@@ -1,4 +1,4 @@
-# ☁️ Leveraging Splunk Cloud for log aggregation and analysis
+# ☁️ Splunk Cloud: Configuring Universal Forwarders & Performing Foundational Searches
 
 ## 📖 Overview
 This documentation outlines the process of configuring **Splunk Cloud** to receive and analyze log data from both **Windows** and **Linux** instances using **Universal Forwarders (UF)**. The goal of this project is to develop hands-on experience with **log aggregation, security monitoring, and Splunk Processing Language (SPL)** within my **HomeLab setup**.  
@@ -240,7 +240,7 @@ Monitored Files:
 ### 3. Carrying out basic searches
 The goal of this project was to develop a fundamental understanding of log collection, forwarding, and searching within Splunk Cloud. Now that our Windows and Linux instances are successfully sending logs, we can begin exploring basic SPL queries.
 
-### 3.1. Detecting incorrect logins (Linux)
+### 3.1. Search Query: Detecting incorrect logins (Linux)
 To simulate real-world attack scenarios, I attempted to log into our Linux machine using several **non-existent usernames**. This generated logs that are useful for investigating potential **enumeration attacks**, where an attacker systematically attempts different usernames to discover valid accounts.
 
 By searching for **failed login attempts with invalid users**, we can detect **unauthorized access attempts** and take action to harden authentication security.
@@ -253,7 +253,7 @@ index=linux_logs "Invalid user"
 
 - Future expansion: Set up Splunk alerts to notify administrators when multiple failed login attempts occur within a short time frame.
 
-### 3.2 Correct logins
+### 3.2 Search Query: Detecting successful logins (Linux)
 After testing incorrect login attempts, I also wanted to verify that our Universal Forwarder is capturing successful SSH logins.
 
 ```
@@ -268,8 +268,32 @@ index=linux_logs "session opened" OR "session closed"
 
 ![image](https://github.com/user-attachments/assets/8e6edc8a-2774-438f-b516-6972e15020fa)
 
-### 4. Takeaways and follow up projects
+### 3.3 Search Query: Detecting Admin account creation
+In this scenario, we executed a search using **EventCode 4720**, which corresponds to the creation of new user accounts in Windows.
 
+By expanding the log entry, we can see that a new Administrator account named `steven9` was created. This could indicate:
+- A legitimate administrative action** (e.g., IT setup).  
+- A potential security risk, such as unauthorized privilege escalation.  
+
+```
+index=* sourcetype="wineventlog:security" EventCode=4720
+```
+
+![image](https://github.com/user-attachments/assets/279006f3-24cb-4608-86c0-fcdfcedec2e3)
+
+### 3.4 Search Query: Detecting successful logins (Windows)
+To confirm that our Universal Forwarder (UF) is successfully capturing authentication events, we used EventCode 4624, which represents successful user logins in Windows.
+By analysing these logs, we can verify who is accessing the Windows EC2 instance, identify expected vs. unexpected logins, and track potential unauthorised access attempts.
+
+```
+index=* sourcetype="wineventlog:security" EventCode=4624
+```
+![image](https://github.com/user-attachments/assets/22eff1c8-7528-42f9-b21d-f915189f12d6)
+
+### 4. Takeaways and follow up projects
+This project served as a fundamental introduction to Splunk Universal Forwarders, focusing on log collection and forwarding from Windows and Linux instances to Splunk Cloud. By successfully configuring UFs and running basic SPL queries, we established a strong foundation for log analysis and security monitoring. 
+
+In the future I aim to expand on this project, building scenario-based investigations to simulate more security events. Additionally, carry out more advanced SPL searches to detect anomalies and trends, and to get familiar with the SPL language. Also, creating alerts and reports in splunk, much like a cybersecurity professional would do in a real world setting. Finally, leveraging dashboards for proactive monitoring. 
 
 
 
