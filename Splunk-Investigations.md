@@ -1,20 +1,16 @@
 # 🔍 Splunk Cloud: Scenario-Based Investigations, Alerts & Dashboards  
 
 ## 📖 Overview
-This is a follow up project to my initial Splunk Cloud setup with Universal Forwarders on both a Windows & Linux machine. In this project, I aim to simulate real-world security scenarios, perform further SPL queries, and create alerts and dashboards, to develop a deeper understanding of Splunk and to gain hands-on experience. This will also serve me well as I soon intend to take the Blue Team Level 1 certifcation exam. 
+This is a follow up project to my initial Splunk Cloud setup with Universal Forwarders on both a Windows & Linux machine. In this project, I aim to simulate real-world security scenarios, perform further SPL queries, and create alerts and dashboards, to develop a deeper understanding of Splunk and to gain hands-on experience. To accompany this documentation, I will refer to the MITRE ATTACK framework, referencing real world examples for prevention and detection strategies. 
+
+I will then leverage the knowledge gained to assist me in the Blue Team Level 1 certifcation exam. 
 
 ## 🎯 Goals
 - Simulate security events for log analysis and threat detection.
 - Perform more advanced SPL searches to hands-on experience and development.
 - Create real-time alerts for security incidents.  
-- Develop dashboards for proactive log monitoring and visualisation.
 - Utilise the MITRE ATTACK Framework to align with real-world adversary tactics.
-
-### Learning & Practical Applications  
-- Building scenario-based investigations for real-world security analysis.  
-- Learning SPL techniques for anomaly detection & log correlation.  
-- Automating security monitoring with alerts & scheduled reports.  
-- Designing Splunk dashboards for continuous security insights.
+- Develop dashboards for proactive log monitoring and visualisation.
 
 ### 🔍 MITRE ATT&CK Framework Integration  
 This project also allowed me to gain essential experience using MITRE ATT&CK. By structuring our tests and detections based on MITRE techniques, I can ensure our Splunk implementation mirrors industry best practices for security monitoring. Below are the MITRE techniques referred to in this project, which I carried out during the practical tests. 
@@ -27,10 +23,10 @@ This project also allowed me to gain essential experience using MITRE ATT&CK. By
 ## Project walk-through
 This section provides a step-by-step breakdown of the process followed in this follow-up Splunk project. It demonstrates my enthusiasm for learning industry-relevant tools and developing the skills essential for an aspiring cybersecurity professional. Additionally, this serves as a learning resource that I can refer back to as I continue expanding my expertise.
 
-### 1. Carrying out scenario-based Security Events
+### 1. Carrying out scenario-based Security Events in Linux
 Generating security incidents to later analyse in Splunk. Overview of each security event and commands used.
 
-### 1.1 Linux Endpoint
+### 1.1 OS Credential Dumping
 - Unprivileged user attempts to read `/etc/passwd` (ID: T1003.008)
 
 ### 1.2 Configure AuditD
@@ -126,19 +122,12 @@ The alert was then configured to send to my email address (left blank for privac
 ![image](https://github.com/user-attachments/assets/718d4327-c957-46a3-b5eb-3d37e482ca73)
 
 ### 1.5 Triggering the alert.
+Back in my Linux machine, I once again attempted to access `/etc/shadow` from our non-admin user. This successfully generated an alert, and I was notified via email!
+
+![image](https://github.com/user-attachments/assets/8bbb2b95-19ea-4d31-ae95-fd5386a06db6)
+
+### 2. Carrying out scenario-based Security Events in Linux pt.2
+
+### 2.1 Account Manipulation
 
 
-### 2. SPL Searches & Threat Hunting
-Carrying out SPL searches to identify the generated security events in Splunk.
-
-### 3. Creating Alerts & Reports in Splunk
-Hands-on experience creating alerts and reports in Splunk.
-
-### 4. Building Splunk Dashboards
-Creating splunk dashboards for proactive threat response.
-
-### 5. SPL Glossary
-Summary of commands used including command details.
-
-### 6. Overview
-Overview of the project and lessons learned.
