@@ -19,5 +19,19 @@ This is the follow up project to my initial Splunk Cloud setup with Universal Fo
 This section provides a step-by-step breakdown of the process followed in this follow-up Splunk project. It demonstrates my enthusiasm for learning industry-relevant tools and developing the skills essential for an aspiring cybersecurity professional. Additionally, this serves as a learning resource that I can refer back to as I continue expanding my expertise.
 
 ### 1. Carrying out scenario-based Security Events
+Generating security incidents to later analyse in Splunk.
 
+### 2. SPL Searches & Threat Hunting
+Carrying out SPL searches to identify the generated security events in Splunk.
 
+### 3. Creating Alerts & Reports in Splunk
+Hands-on experience creating alerts and reports in Splunk.
+
+### 4. Building Splunk Dashboards
+Creating splunk dashboards for proactive threat response.
+
+### 5. SPL Glossary
+Summary of commands used including command details.
+
+### 6. Overview
+Overview of the project and lessons learned.
