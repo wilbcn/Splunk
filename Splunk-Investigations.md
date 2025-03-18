@@ -106,11 +106,26 @@ SPL Query: index=linux_logs sourcetype=linux:audit "shadow-access" success=no
 | **`success`** | `no`                              | Access attempt **failed**. |
 | **`exit`**    | `-13`                             | **Permission Denied** (`EACCES` error). |
 
-- This confirms that `badguy` attempted to access `/etc/shadow` but was denied due to insufficient permissions. Referring to the MITRE ATTACK resource for this security risk, https://attack.mitre.org/techniques/T1003/008/, lets implement one of the detection techniques `DS0017`
+- This confirms that `badguy` attempted to access `/etc/shadow` but was denied due to insufficient permissions. Referring to the MITRE ATT&CK Framework (T1003.008 - /etc/shadow Credential Dumping), we can enhance our detection capabilities by implementing Detection Strategy `DS0022`, on File Access.
 
-![image](https://github.com/user-attachments/assets/c2d37991-d893-42de-bee2-be11ba392d52)
+![image](https://github.com/user-attachments/assets/930f0466-d531-4f53-b8b4-5c43176f980c)
 
+### 1.4 Creating the alert
+Now to create the alert in Splunk. After performing the SPL query, we can click save-as alert.
 
+![image](https://github.com/user-attachments/assets/c8d4ada7-4c75-43fa-ba7c-b44d16b51490)
+
+The alert was then created with an appropriate title and description. The cron job was set to every 5 minutes. I left the expiration at 24 hours as we are only testing. The trigger conditions were set so we would receive an alert each time the conditions were met. 
+
+![image](https://github.com/user-attachments/assets/a62dd5ba-e742-49ee-bc7d-2a5ccd2893c4)
+
+The alert was then configured to send to my email address (left blank for privacy reasons). With an appropriate subject and priority level.
+
+![image](https://github.com/user-attachments/assets/eb505393-b72e-49eb-8dac-09b4521421ff)
+
+![image](https://github.com/user-attachments/assets/718d4327-c957-46a3-b5eb-3d37e482ca73)
+
+### 1.5 Triggering the alert.
 
 
 ### 2. SPL Searches & Threat Hunting
