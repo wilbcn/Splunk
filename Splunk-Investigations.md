@@ -1,9 +1,9 @@
 # 🔍 Splunk Cloud: Scenario-Based Investigations, Alerts & Dashboards  
 
 ## 📖 Overview
-This is a follow up project to my initial Splunk Cloud setup with Universal Forwarders on both a Windows & Linux machine. In this project, I aim to simulate real-world security scenarios, perform further SPL queries, and create alerts and dashboards, to develop a deeper understanding of Splunk and to gain hands-on experience. To accompany this documentation, I will refer to the MITRE ATTACK framework, referencing real world examples for prevention and detection strategies. 
+This is a follow up project to my initial Splunk Cloud setup with Universal Forwarders on both a Windows & Linux machine. In this project, I aim to simulate real-world security scenarios, perform further SPL queries, and create alerts and dashboards, to develop a deeper understanding of Splunk and to gain hands-on experience. To accompany this documentation, I will refer to the MITRE ATTACK framework, referencing real world examples for prevention and detection strategies. I will then leverage the knowledge gained to assist me in the Blue Team Level 1 certifcation exam. 
 
-I will then leverage the knowledge gained to assist me in the Blue Team Level 1 certifcation exam. 
+[Splunk Cloud Setup](https://github.com/wilbcn/Splunk/blob/main/Splunk-Cloud-HomeLab.md)
 
 ## 🎯 Goals
 - Simulate security events for log analysis and threat detection.
@@ -124,7 +124,7 @@ The alert was then configured to send to my email address (left blank for privac
 ### 1.5 Triggering the alert.
 Back in my Linux machine, I once again attempted to access `/etc/shadow` from our non-admin user. This successfully generated an alert, and I was notified via email!
 
-![image](https://github.com/user-attachments/assets/8bbb2b95-19ea-4d31-ae95-fd5386a06db6)
+![image](https://github.com/user-attachments/assets/167eb89e-839d-4509-9ed8-b16e0b1ecce1)
 
 ### 2. Carrying out scenario-based Security Events in Linux pt.2
 
