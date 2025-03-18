@@ -1,7 +1,7 @@
 # 🔍 Splunk Cloud: Scenario-Based Investigations, Alerts & Dashboards  
 
 ## 📖 Overview
-This is the follow up project to my initial Splunk Cloud setup with Universal Forwarders on both a Windows & Linux machine. In this project, I aim to carry simulate real-world security scenarios, perform further SPL queries, and create alerts and dashboards, to develop a deeper understanding of Splunk and to gain hands-on experience. This will also serve me well as I soon intend to take the Blue Team Level 1 certifcation exam. 
+This is a follow up project to my initial Splunk Cloud setup with Universal Forwarders on both a Windows & Linux machine. In this project, I aim to simulate real-world security scenarios, perform further SPL queries, and create alerts and dashboards, to develop a deeper understanding of Splunk and to gain hands-on experience. This will also serve me well as I soon intend to take the Blue Team Level 1 certifcation exam. 
 
 ## 🎯 Goals
 - Simulate security events for log analysis and threat detection.
@@ -17,15 +17,12 @@ This is the follow up project to my initial Splunk Cloud setup with Universal Fo
 - Designing Splunk dashboards for continuous security insights.
 
 ### 🔍 MITRE ATT&CK Framework Integration  
-This project also allows me to gain essential experience using MITRE ATT&CK. By structuring our tests and detections based on MITRE techniques, I can  ensure our Splunk implementation mirrors industry best practices for security monitoring.  
+This project also allowed me to gain essential experience using MITRE ATT&CK. By structuring our tests and detections based on MITRE techniques, I can ensure our Splunk implementation mirrors industry best practices for security monitoring. Below are the MITRE techniques referred to in this project, which I carried out during the practical tests. 
 
 | **Tactic** | **MITRE Technique** | **Simulated Test** | **Expected Detection** |
 |------------|------------------|------------------|------------------|
 | **Credential Access** | `T1003.008 - OS Credential Dumping` | Unprivileged user attempts to read `/etc/shadow` | `index=linux_logs sourcetype=linux:audit file IN ("/etc/passwd", "/etc/shadow")` |
-| **Defense Evasion** | `T1078 - Valid Accounts` | Privilege escalation via `sudo` group addition | `index=linux_logs sourcetype=linux:auth "usermod -aG sudo"` |
 | **Persistence** | `T1098 - Account Manipulation` | New admin account creation | `index=linux_logs sourcetype=linux:auth EventCode=4720` |
-| **Initial Access** | `T1110 - Credential Brute Force` | Multiple failed SSH login attempts | `index=linux_logs sourcetype=linux:auth "Invalid user"` |
-| **Execution** | `T1059 - Command and Scripting Interpreter` | Running a suspicious script | `index=linux_logs sourcetype=syslog "malware.sh"` |
 
 ## Project walk-through
 This section provides a step-by-step breakdown of the process followed in this follow-up Splunk project. It demonstrates my enthusiasm for learning industry-relevant tools and developing the skills essential for an aspiring cybersecurity professional. Additionally, this serves as a learning resource that I can refer back to as I continue expanding my expertise.
@@ -34,11 +31,11 @@ This section provides a step-by-step breakdown of the process followed in this f
 Generating security incidents to later analyse in Splunk. Overview of each security event and commands used.
 
 ### 1.1 Linux Endpoint
-- Unprivileged user attempts to read /etc/passwd (ID: T1003.008)
+- Unprivileged user attempts to read `/etc/passwd` (ID: T1003.008)
 
 ### 1.2 Configure AuditD
 
-For this test, I had to configure and enable AuditD. This audit logs, I could send changes to files such as /etc/passwd and /shadow from our UF to Splunk Cloud. On our Linux machine as splunkadmin:
+For this test, I had to configure and enable AuditD. This audit logs, I could send changes to files such as `/etc/passwd` and `/etc/shadow` from our UF to Splunk Cloud. On our Linux machine as splunkadmin:
 - Install and Enable AuditD
 ```
 sudo apt update && sudo apt install auditd -y
@@ -92,9 +89,26 @@ sourcetype = linux:audit
 sudo systemctl restart SplunkForwarder
 ```
 
-### 1.3 Carry out unauthorised access
-Here I simulated access attempts
+### 1.3 Simulating unauthorised access
+Here I simulated access attempts from our non-admin user account to `/etc/shadow`. This is a system file in Linux that stores encrypted user passwords and is accessible only to the root user. Attempted access could be a potential security risk, and something we can simulate and take proactive action against in this project.
 
+SPL Query: index=linux_logs sourcetype=linux:audit "shadow-access" success=no
+
+![image](https://github.com/user-attachments/assets/e7b714da-e936-41f6-97aa-25f829549742)
+
+- By expanding on these log entries, we are able to identify valuable information about this event.
+
+| **Field**      | **Value**                           | **Explanation** |
+|---------------|-----------------------------------|----------------|
+| **`_time`**   | `2025-03-18T12:32:06.728+00:00`   | Timestamp of the event. |
+| **`UID`**     | `badguy`                          | The user attempting access. |
+| **`key`**     | `shadow-access`                   | AuditD rule matched (attempt to access `/etc/shadow`). |
+| **`success`** | `no`                              | Access attempt **failed**. |
+| **`exit`**    | `-13`                             | **Permission Denied** (`EACCES` error). |
+
+- This confirms that `badguy` attempted to access `/etc/shadow` but was denied due to insufficient permissions. Referring to the MITRE ATTACK resource for this security risk, https://attack.mitre.org/techniques/T1003/008/, lets implement one of the detection techniques `DS0017`
+
+![image](https://github.com/user-attachments/assets/c2d37991-d893-42de-bee2-be11ba392d52)
 
 
 
