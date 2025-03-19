@@ -27,7 +27,7 @@ This section provides a step-by-step breakdown of the process followed in this f
 Generating security incidents to later analyse in Splunk. Overview of each security event and commands used.
 
 ### 1.1 OS Credential Dumping
-- Unprivileged user attempts to read `/etc/passwd` (ID: T1003.008)
+- Unprivileged user attempts to read `/etc/shadow` (ID: T1003.008)
 
 ### 1.2 Configure AuditD
 
@@ -102,7 +102,7 @@ SPL Query: index=linux_logs sourcetype=linux:audit "shadow-access" success=no
 | **`success`** | `no`                              | Access attempt **failed**. |
 | **`exit`**    | `-13`                             | **Permission Denied** (`EACCES` error). |
 
-- This confirms that `badguy` attempted to access `/etc/shadow` but was denied due to insufficient permissions. Referring to the MITRE ATT&CK Framework (T1003.008 - /etc/shadow Credential Dumping), we can enhance our detection capabilities by implementing Detection Strategy `DS0022`, on File Access.
+- This confirms that `badguy` attempted to access `/etc/shadow` but was denied due to insufficient permissions. Referring to the MITRE ATT&CK Framework (T1003.008 - /etc/shadow Credential Dumping), we can enhance our detection capabilities by creating an alert on Files Access attempts - Detection Strategy `DS0022`.
 
 ![image](https://github.com/user-attachments/assets/930f0466-d531-4f53-b8b4-5c43176f980c)
 
@@ -125,6 +125,9 @@ The alert was then configured to send to my email address (left blank for privac
 Back in my Linux machine, I once again attempted to access `/etc/shadow` from our non-admin user. This successfully generated an alert, and I was notified via email!
 
 ![image](https://github.com/user-attachments/assets/167eb89e-839d-4509-9ed8-b16e0b1ecce1)
+
+### 1.6 Mitigation techniques
+
 
 ### 2. Carrying out scenario-based Security Events in Linux pt.2
 
