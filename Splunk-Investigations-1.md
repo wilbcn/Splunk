@@ -9,7 +9,7 @@ By structuring our detection and response techniques around MITRE's T1003.008 (O
 [Splunk Cloud Setup](https://github.com/wilbcn/Splunk/blob/main/Splunk-Cloud-HomeLab.md)
 
 ## 🎯 Goals
-✅ Detect unauthorized access attempts on /etc/shadow and /etc/passwd.
+✅ Detect unauthorised access attempts on /etc/shadow and /etc/passwd.
 ✅ Create real-time alerts for security monitoring.
 ✅ Apply MITRE ATT&CK-aligned detection & mitigation strategies.
 ✅ Implement group-based access controls to proactively restrict access.
@@ -217,9 +217,16 @@ Allowed!
 ```
 
 ### 2. Summary and lessons learned
+This project served as a continuation of my journey into learning Splunk while integrating MITRE ATT&CK techniques to simulate, detect, alert, and mitigate security threats. By focusing on unauthorised access attempts to `/etc/shadow` and `/etc/passwd`, I was able to apply real-world log analysis, alerting, and security hardening techniques used in Blue Team operations. 
 
+While this project focused on securing sensitive files, it serves as a foundation for expanding into more advanced security monitoring. Future projects will explore additional attack simulations using Splunk detection, alerting, and mitigation strategies, aligned with MITRE ATT&CK tactics.
 
+### Upcoming Projects  
 
-
+| **Project Focus** | **MITRE ATT&CK ID** | **Description** |
+|------------------|----------------------|------------------|
+| 🏴‍☠️ **Detecting Unauthorised Admin Account Creation** | `T1098 - Account Manipulation` | Monitor and alert when a new admin account is created in Linux. |
+| 🔐 **Windows Security Event Monitoring** | `T1078 - Valid Accounts` | Detect privilege escalation or unauthorised access attempts in Windows logs. |
+| 🛡 **Enhanced Alerting & Automation** | `DS0017 - Command Execution` | Expand Splunk alerts to track suspicious shell commands, such as sudden privilege changes. |
 
 
