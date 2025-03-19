@@ -1,16 +1,19 @@
-# 🔍 Splunk Cloud: Scenario-Based Investigations, Alerts & Dashboards  
+# 🔍 Splunk Cloud: Splunk Cloud: Detecting & Mitigating Unauthorised Access to Sensitive Files
 
 ## 📖 Overview
-This is a follow up project to my initial Splunk Cloud setup with Universal Forwarders on both a Windows & Linux machine. In this project, I aim to simulate real-world security scenarios, perform further SPL queries, and create alerts and dashboards, to develop a deeper understanding of Splunk and to gain hands-on experience. To accompany this documentation, I will refer to the MITRE ATTACK framework, referencing real world examples for prevention and detection strategies. I will then leverage the knowledge gained to assist me in the Blue Team Level 1 certifcation exam. 
+This project expands upon my Splunk Cloud setup with Universal Forwarders by focusing on a specific security scenario: securing /etc/shadow and /etc/passwd from unauthorized access attempts.
+The goal is to detect, alert, and mitigate potential threats using Splunk SPL searches, alerts, and the MITRE ATT&CK framework.
+
+By structuring our detection and response techniques around MITRE's T1003.008 (OS Credential Dumping), I ensure alignment with real-world security methodologies. This project also serves as a learning resource for developing Blue Team skills, including log analysis, alerting, and security monitoring.
 
 [Splunk Cloud Setup](https://github.com/wilbcn/Splunk/blob/main/Splunk-Cloud-HomeLab.md)
 
 ## 🎯 Goals
-- Simulate security events for log analysis and threat detection.
-- Perform more advanced SPL searches to hands-on experience and development.
-- Create real-time alerts for security incidents.  
-- Utilise the MITRE ATTACK Framework to align with real-world adversary tactics.
-- Develop dashboards for proactive log monitoring and visualisation.
+✅ Detect unauthorized access attempts on /etc/shadow and /etc/passwd.
+✅ Create real-time alerts for security monitoring.
+✅ Apply MITRE ATT&CK-aligned detection & mitigation strategies.
+✅ Implement group-based access controls to proactively restrict access.
+✅ Develop a structured approach to security monitoring in Splunk Cloud.
 
 ### 🔍 MITRE ATT&CK Framework Integration  
 This project also allowed me to gain essential experience using MITRE ATT&CK. By structuring our tests and detections based on MITRE techniques, I can ensure our Splunk implementation mirrors industry best practices for security monitoring. Below are the MITRE techniques referred to in this project, which I carried out during the practical tests. 
@@ -18,7 +21,8 @@ This project also allowed me to gain essential experience using MITRE ATT&CK. By
 | **Tactic** | **MITRE Technique** | **Simulated Test** | **Expected Detection** |
 |------------|------------------|------------------|------------------|
 | **Credential Access** | `T1003.008 - OS Credential Dumping` | Unprivileged user attempts to read `/etc/shadow` | `index=linux_logs sourcetype=linux:audit file IN ("/etc/passwd", "/etc/shadow")` |
-| **Persistence** | `T1098 - Account Manipulation` | New admin account creation | `index=linux_logs sourcetype=linux:auth EventCode=4720` |
+| **Detection Strategy** | `DS0022 - File Access Monitoring` | Create an alert based on secure file access violations | `index=linux_logs sourcetype=linux:audit "shadow-access" success=no` |
+| **Mitigation Strategy** | `M1026 - Privileged Account Management` | Restrict file access using ACLs & Group-Based Policies | `setfacl -m g:general_users:--- /etc/shadow` |
 
 ## Project walk-through
 This section provides a step-by-step breakdown of the process followed in this follow-up Splunk project. It demonstrates my enthusiasm for learning industry-relevant tools and developing the skills essential for an aspiring cybersecurity professional. Additionally, this serves as a learning resource that I can refer back to as I continue expanding my expertise.
@@ -102,12 +106,12 @@ SPL Query: index=linux_logs sourcetype=linux:audit "shadow-access" success=no
 | **`success`** | `no`                              | Access attempt **failed**. |
 | **`exit`**    | `-13`                             | **Permission Denied** (`EACCES` error). |
 
-- This confirms that `badguy` attempted to access `/etc/shadow` but was denied due to insufficient permissions. Referring to the MITRE ATT&CK Framework (T1003.008 - /etc/shadow Credential Dumping), we can enhance our detection capabilities by creating an alert on Files Access attempts - Detection Strategy `DS0022`.
+- This confirms that `badguy` attempted to access `/etc/shadow` but was denied due to insufficient permissions. 
 
 ![image](https://github.com/user-attachments/assets/930f0466-d531-4f53-b8b4-5c43176f980c)
 
 ### 1.4 Creating the alert
-Now to create the alert in Splunk. After performing the SPL query, we can click save-as alert.
+Referring to the MITRE ATT&CK Framework (T1003.008 - /etc/shadow Credential Dumping), we can enhance our detection capabilities by creating an alert on Files Access attempts - Detection Strategy `DS0022`. After performing the SPL query, we can click save-as alert.
 
 ![image](https://github.com/user-attachments/assets/c8d4ada7-4c75-43fa-ba7c-b44d16b51490)
 
@@ -127,10 +131,95 @@ Back in my Linux machine, I once again attempted to access `/etc/shadow` from ou
 ![image](https://github.com/user-attachments/assets/167eb89e-839d-4509-9ed8-b16e0b1ecce1)
 
 ### 1.6 Mitigation techniques
+After detecting unauthorised access attempts, I implement M1026 - Privileged Account Management to proactively restrict access to sensitive files. Instead of blocking users individually, I applied group-based restrictions to ensure that only privileged users can access `/etc/shadow` while logging violations for security monitoring.
+
+- Current ownership and permissions. Only users in the shadow group have access to `/etc/shadow`
+
+```
+ls -l /etc/shadow /etc/passwd
+-rw-r--r-- 1 root root   2014 Mar 18 10:30 /etc/passwd
+-rw-r----- 1 root shadow 1135 Mar 18 10:30 /etc/shadow
+```
+
+- I then created some test users, and a general users group to add all non-admin users to.
+
+e.g.
+```
+sudo useradd -m -s /bin/bash tomsmith
+sudo passwd tomsmith
+New password:
+Retype new password:
+passwd: password updated successfully
+```
+
+```
+sudo addgroup general_users
+[sudo] password for splunkadmin:
+info: Selecting GID from range 1000 to 59999 ...
+info: Adding group `general_users' (GID 1004) ...
+```
+
+- Test user was then added to the new group
+
+```
+sudo usermod -aG general_users tomsmith
+splunkadmin@ip:~$ groups tomsmith
+tomsmith : tomsmith general_users
+```
+
+- Now tomsmith belongs to general_users, which we will restrict. Firstly, I installed the ACL package.
+
+```
+sudo apt update && sudo apt install acl -y
+```
+
+- Applying group based restrictions. These commands remove `rwx` permissions for our `general_users` group on `/etc/shadow`, and read access only on `/etc/passwd`.
+```
+sudo setfacl -m g:general_users:--- /etc/shadow
+sudo setfacl -m g:general_users:r-- /etc/passwd
+```
+
+- Confirming the ACL changes
+
+```
+getfacl /etc/shadow
+getfacl: Removing leading '/' from absolute path names
+# file: etc/shadow
+# owner: root
+# group: shadow
+user::rw-
+group::r--
+group:general_users:---
+mask::r--
+other::---
+
+getfacl /etc/passwd
+getfacl: Removing leading '/' from absolute path names
+# file: etc/passwd
+# owner: root
+# group: root
+user::rw-
+group::r--
+group:general_users:r--
+mask::r--
+other::r--
+```
+
+- Standard users can read `passwd` by default, however, applying an explicit ACL (r-- for general_users) ensures we maintain control over access permissions, even if system defaults change in the future. Next I tested the applied changes. 
+
+```
+tomsmith@ip:~$ cat /etc/shadow
+cat: /etc/shadow: Permission denied
+
+tomsmith@ip:~$ cat /etc/passwd
+
+Allowed!
+```
+
+### 2. Summary and lessons learned
 
 
-### 2. Carrying out scenario-based Security Events in Linux pt.2
 
-### 2.1 Account Manipulation
+
 
 
