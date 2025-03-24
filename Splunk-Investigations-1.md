@@ -31,7 +31,7 @@ This section provides a step-by-step breakdown of the process followed in this f
 Generating security incidents to later analyse in Splunk. Overview of each security event and commands used.
 
 ### 1.1 Technique Overview
-- Unprivileged user attempts to read `/etc/shadow` [T1003.008 -  OS Credential Dumping](https://attack.mitre.org/techniques/T1003/008/)
+Unprivileged user attempts to read `/etc/shadow` [T1003.008 -  OS Credential Dumping](https://attack.mitre.org/techniques/T1003/008/)
 
 ### 1.2 Configure AuditD
 
