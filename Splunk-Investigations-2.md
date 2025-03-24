@@ -45,7 +45,7 @@ A new administrator account is created, that also has a suspicious name. [T1098 
 <img width="1125" alt="image" src="https://github.com/user-attachments/assets/04c2bc4c-9ec2-4b2e-a856-dd34a26b0187" />
 
 ### 1.3 Initial SPL search
-Now that are _suspicious_ admin has been created, I ran an initial query in Splunk to verify we were generating logs for this event.
+Now that _suspicious_ admin has been created, I ran an initial query in Splunk to verify we were generating logs for this event.
 
 ```
 index=* sourcetype="WinEventLog:Security" (EventCode=4720 OR EventCode=4732)
