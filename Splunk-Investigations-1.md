@@ -1,4 +1,4 @@
-# 🔍 Splunk Cloud: Splunk Cloud: Detecting & Mitigating Unauthorised Access to Sensitive Files
+# 🔍 Splunk Cloud: Detecting & Mitigating Unauthorised Access to Sensitive Files
 
 ## 📖 Overview
 This project expands upon my Splunk Cloud setup with Universal Forwarders by focusing on a specific security scenario: securing /etc/shadow and /etc/passwd from unauthorized access attempts.
@@ -225,8 +225,9 @@ While this project focused on securing sensitive files, it serves as a foundatio
 
 | **Project Focus** | **MITRE ATT&CK ID** | **Description** |
 |------------------|----------------------|------------------|
-| 🏴‍☠️ **Detecting Unauthorised Admin Account Creation** | `T1098 - Account Manipulation` | Monitor and alert when a new admin account is created in Linux. |
-| 🔐 **Windows Security Event Monitoring** | `T1078 - Valid Accounts` | Detect privilege escalation or unauthorised access attempts in Windows logs. |
-| 🛡 **Enhanced Alerting & Automation** | `DS0017 - Command Execution` | Expand Splunk alerts to track suspicious shell commands, such as sudden privilege changes. |
+| 🏴‍☠️ **Detecting Unauthorised Admin Account Creation** | `T1098 - Account Manipulation` | Monitor and alert when a new admin account is created. Get practice with building dashboards. |
+
+[Follow up Project](https://github.com/wilbcn/Splunk/blob/main/Splunk-Investigations-2.md)
+
 
 
