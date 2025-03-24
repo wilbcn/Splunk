@@ -32,4 +32,52 @@ This project strengthens my understanding of adversary behavior by simulating ac
 This section provides a step-by-step breakdown of the work carried out in this Splunk project. It demonstrates my ability to simulate adversarial tactics, detect privilege escalation using SPL, and take action through real-time alerts and visual dashboards. As with previous projects, this serves both as a practical security learning experience and a documented workflow I can refer to in the future.
 
 ### 1. Simulating Scenario-Based Security Events in Windows
+Generating security incidents to later analyse in Splunk. Overview of each security event and commands used.
+
+### 1.1 Technique Overview
+A new administrator account is created, that also has a suspicious name. [T1098 - Account Manipulation](https://attack.mitre.org/techniques/T1098/)
+
+### 1.2 Simulating the security event - New Admin creation
+- In control panel, I navigated to User Accounts, User Accounts, Manage Accounts, and Add a user account
+- I then created a new user account, opting for an 'IT-Looking' username, which a real attacker may use in order to blend in.
+- Going into the settings for our new user, I then changed the account type to Administrator.
+
+<img width="1125" alt="image" src="https://github.com/user-attachments/assets/04c2bc4c-9ec2-4b2e-a856-dd34a26b0187" />
+
+### 1.3 Initial SPL search
+Now that are _suspicious_ admin has been created, I ran an initial query in Splunk to verify we were generating logs for this event.
+
+```
+index=* sourcetype="WinEventLog:Security" (EventCode=4720 OR EventCode=4732)
+```
+
+![image](https://github.com/user-attachments/assets/ebc94f68-2b76-45e8-97e3-028c6a433ee2)
+
+By expanding on these logs, we can see that the account `Administrator` has created a new user, called `system_admin`, at `03/24/2025 07:09:46 PM`
+
+![image](https://github.com/user-attachments/assets/dc8580d1-5463-49d1-b845-ac365c3dcdc4)
+
+This is a security concern for multiple reasons: 
+- The name `system_admin` follows a suspicious naming pattern that an attacker might use to blend in.
+- The account was created outside of regular working hours, which could indicate unauthorised activity.
+
+Expanding on the next log, we are able to see than an account has been added to a `security-enabled local group`
+
+![image](https://github.com/user-attachments/assets/92bb5224-c58d-4cd4-94f4-371f4bb0b758)
+
+While this security event was logged in Splunk, `Event ID `4732` did not contain the resolved username of the account added to the Administrators group. 
+
+### 1.4 Verifying in Windows Event Viewer
+To confirm which user was added to the Administrators group, I used the Event Viewer directly on the Windows Machine. [Acknowledgement](https://www.blumira.com/blog/event-id-4732)
+
+In Event Viewer, I applied a custom filter to show only Event ID `4732` from the last 24 hours:
+
+<img width="546" alt="image" src="https://github.com/user-attachments/assets/906e3464-e97a-4464-a5b4-1f253e7512d0" />
+
+This allowed me to confirm that `system_admin`, the newly created user account, was also added to the group `Administrators`.
+
+<img width="1437" alt="image" src="https://github.com/user-attachments/assets/658a5430-38ee-4a0c-8d07-76bd56d6cd30" />
+
+### 2. Place holder
+
 
