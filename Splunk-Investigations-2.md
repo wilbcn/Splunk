@@ -20,21 +20,20 @@ To carry out this project, I configured universal forwarders on some EC2 instanc
 ### 🔍 MITRE ATT&CK Framework Integration  
 This project strengthens my understanding of adversary behavior by simulating account manipulation techniques and aligning detection strategies with the MITRE ATT&CK framework. By leveraging SPL, alerts, and dashboards, I aim to replicate how a SOC analyst would monitor for and respond to suspicious privilege escalation attempts.
 
-### Account Creation
+| **Tactic**            | **MITRE Technique**                      | **Simulated Action**                       | **SPL Example / Evidence** |
+|-----------------------|------------------------------------------|--------------------------------------------|-----------------------------|
+| Persistence           | `T1136.001 - Create Account: Local Account` | Create a new local user account            | `index=* sourcetype="WinEventLog:Security" EventCode=4720` |
+| Privilege Escalation  | `T1078.003 - Valid Accounts: Local Accounts` | Add that user to the Administrators group  | `index=* sourcetype="WinEventLog:Security" EventCode=4732` |
 
-| **Tactic**            | **MITRE Technique**                | **Simulated Test**                              | **Expected Detection** |
-|-----------------------|------------------------------------|-------------------------------------------------|-------------------------|
-| **Persistence**       | `T1136.001 - Create Account: Local Account`     | Create a new admin account in Windows           | `index=* sourcetype="WinEventLog:Security" EventCode=4720` |
-| **Detection Strategy**| `DS0002 - User Account Creation` | Detect new user creation with account audits     | Alert on EventCode=4720 |
-| **Mitigation Strategy**| `M1032 -  Multi-factor Authentication` | Use multi-factor authentication for user and privileged accounts. | Enable MFA. |
+| **Strategy**                  | **MITRE ID**                     | **What It Detects**                                   | **Implementation**                |
+|------------------------------|----------------------------------|--------------------------------------------------------|-----------------------------------|
+| User Account Creation        | `DS0002 - User Account Creation` | Creation of new user accounts                          | Alert on `EventCode=4720`         |
+| Privilege Escalation via Account | `DS0002 - User Account Authentication` | Existing account elevates another to admin             | Alert on `EventCode=4732`         |
 
-### Privilege Escalation
-
-| **Tactic**             | **MITRE Technique**                              | **Simulated Test**                              | **Expected Detection**                                       |
-|------------------------|--------------------------------------------------|-------------------------------------------------|--------------------------------------------------------------|
-| **Privilege Escalation** | `T1078.003 – Valid Accounts: Local Accounts`  | Newly created user added to Administrators group | `index=* sourcetype="WinEventLog:Security" EventCode=4732`   |
-| **Detection Strategy**  | `DS0028 – Group Modification`                  | Monitor when users are added to privileged groups | Alert on EventCode `4732` with `Group Name=Administrators`   |
-| **Mitigation Strategy** | `M1018 – User Account Management`              | Regularly audit user accounts for activity and deactivate or remove any that are no longer needed.
+| **Strategy**                 | **MITRE ID**   | **Purpose**                                                                 | **Action Plan**                                |
+|-----------------------------|----------------|------------------------------------------------------------------------------|------------------------------------------------|
+| Multi-Factor Authentication | `M1032`        | Prevent unauthorised access via MFA                                         | Enable MFA for all user/admin accounts         |
+| User Account Management     | `M1018`        | Enforce strict control over account provisioning and usage                  | Regularly audit/remove unused/suspicious accounts |
 
 ---
 
@@ -90,7 +89,8 @@ This allowed me to confirm that `system_admin`, the newly created user account, 
 <img width="1437" alt="image" src="https://github.com/user-attachments/assets/658a5430-38ee-4a0c-8d07-76bd56d6cd30" />
 
 ### 2. Detection Strategy Overview
-To detect potential unauthorized administrator account creation, I implemented a detection strategy based on `MITRE ATT&CK’s DS0028 – Account Creation Monitoring`. This involved refining our SPL query and configuring a real-time alert in Splunk to monitor for the creation of new user accounts, particularly those that could indicate privilege escalation or persistence.
+For this scenario-based project, we are focusing on two different security concerns. A new user being added to the system, and a user being added to the group of Administrators. Based on these, I setup two different Splunk alerts, following closely recommended detection techniques: `DS0002 -  User Account Creation`, `DS0028 - User Account Authentication (Privilege Escalation)` 
+
 
 
 
