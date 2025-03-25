@@ -161,7 +161,9 @@ Snippet:
 
 
 ### 4. Detecting user deletions
-As part of the project clean-up phase, I removed unnecessary administrator accounts from the Windows machine. However, this provided an excellent opportunity to simulate and monitor for user deletions — a behavior that could be associated with adversarial activity. `DS0002 - User Account Deletion`
+As part of the project clean-up phase, I removed unnecessary administrator accounts from the Windows machine.`M1018 - User Account Management`. 
+
+However, this provided an excellent opportunity to simulate and monitor for user deletions — a behavior that could be associated with adversarial activity. `DS0002 - User Account Deletion`
 
 I ran the below SPL query and saved it as an alert, which I then tested during the clean up phase.
 
@@ -177,7 +179,22 @@ Filtering these events in Event Viewer.
 
 <img width="965" alt="image" src="https://github.com/user-attachments/assets/194ea172-0bb0-4c35-b858-52f1131e6bac" />
 
-### 5. Mitigation
+### 5. Extra Mitigation - MFA
+To strengthen our security posture and align with `M1032 - Multi-Factor Authentication`, we could integrate `Duo Security` to protect local and RDP access to our Windows EC2 instance. This adds a second layer of authentication, requiring users to approve a login attempt via a push notification, passcode, or phone call before full access is granted. This is especially effective in preventing unauthorised access to administrator accounts.
+
+Although AWS EC2 does not natively support MFA for RDP sessions, installing Duo’s lightweight Windows agent on the instance would allows us to simulate enterprise-grade MFA enforcement.
+
+🔗 [Duo MFA for RDP Setup Guide](https://duo.com/docs/rdp)
+
+### 6. Summary & Lessons Learned
+
+This project strengthened my practical understanding of Splunk by simulating unauthorized administrator account creation and linking it directly to relevant MITRE ATT&CK techniques. By detecting the creation of local accounts and monitoring for privilege escalation (T1136.001, T1078.003), I was able to build alerts and dashboards that mirror the type of activity a security analyst would investigate in a real-world scenario.
+
+I also explored slightly more advanced SPL queries using `table`, `stats count`, and `timechart` to improve visibility and analysis of account activity. Integrating MITRE’s detection and mitigation strategies (DS0002, M1018, M1032) added realism and structure to this workflow.
+
+In upcoming projects, I aim to:
+- Continue expanding detection coverage with more MITRE-aligned techniques.
+- Integrate **Splunk** with **TheHive** for incident case management and enrichment.
 
 
 
