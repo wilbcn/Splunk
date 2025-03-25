@@ -18,7 +18,7 @@ By structuring our detection and response techniques around MITRE's T1003.008 (O
 ### 🔍 MITRE ATT&CK Framework Integration  
 This project also allowed me to gain essential experience using MITRE ATT&CK. By structuring our tests and detections based on MITRE techniques, I can ensure our Splunk implementation mirrors industry best practices for security monitoring. Below are the MITRE techniques referred to in this project, which I carried out during the practical tests. 
 
-| **Tactic** | **MITRE Technique** | **Simulated Test** | **Expected Detection** |
+| **Tactic** | **MITRE Technique** | **Simulated Test** | **Expected Detection or Action** |
 |------------|------------------|------------------|------------------|
 | **Credential Access** | `T1003.008 - OS Credential Dumping` | Unprivileged user attempts to read `/etc/shadow` | `index=linux_logs sourcetype=linux:audit file IN ("/etc/passwd", "/etc/shadow")` |
 | **Detection Strategy** | `DS0022 - File Access Monitoring` | Create an alert based on secure file access violations | `index=linux_logs sourcetype=linux:audit "shadow-access" success=no` |
