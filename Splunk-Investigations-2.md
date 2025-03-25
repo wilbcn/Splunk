@@ -5,7 +5,7 @@ This project is a continuation of my Splunk series, aimed at gaining hands-on ex
 In this follow-up, I explore and continue learning key Splunk features such as alerts** and dashboards, while aligning all detection and mitigation strategies with the MITRE ATT&CK framework to mirror real-world security operations.
 This projects focuses on unauthorised administrator account creation and privilege escalation on a Windows machine — a critical persistence tactic used by adversaries (MITRE Technique: `T1098 - Account Manipulation`).
 
-To carry out this project, I configured universal forwaders on some EC2 instances.
+To carry out this project, I configured universal forwarders on some EC2 instances.
 [Splunk Cloud Setup](https://github.com/wilbcn/Splunk/blob/main/Splunk-Cloud-HomeLab.md)
 
 ## 🎯 Goals  
@@ -20,11 +20,21 @@ To carry out this project, I configured universal forwaders on some EC2 instance
 ### 🔍 MITRE ATT&CK Framework Integration  
 This project strengthens my understanding of adversary behavior by simulating account manipulation techniques and aligning detection strategies with the MITRE ATT&CK framework. By leveraging SPL, alerts, and dashboards, I aim to replicate how a SOC analyst would monitor for and respond to suspicious privilege escalation attempts.
 
+### Account Creation
+
 | **Tactic**            | **MITRE Technique**                | **Simulated Test**                              | **Expected Detection** |
 |-----------------------|------------------------------------|-------------------------------------------------|-------------------------|
-| **Persistence**       | `T1098 - Account Manipulation`     | Create a new admin account in Windows           | `index=* sourcetype="WinEventLog:Security" EventCode=4720` |
-| **Detection Strategy**| `DS0028 - Account Creation Monitoring` | Alert on the creation of privileged user accounts | `index=* sourcetype="WinEventLog:Security" EventCode=4720 OR EventCode=4732` |
-| **Mitigation Strategy**| `M1018 - User Account Management` | Implement strict user provisioning policies & monitor admin group membership | GPO enforcement, privileged group auditing |
+| **Persistence**       | `T1136.001 - Create Account: Local Account`     | Create a new admin account in Windows           | `index=* sourcetype="WinEventLog:Security" EventCode=4720` |
+| **Detection Strategy**| `DS0002 - User Account Creation` | Detect new user creation with account audits     | Alert on EventCode=4720 |
+| **Mitigation Strategy**| `M1032 -  Multi-factor Authentication` | Use multi-factor authentication for user and privileged accounts. | Enable MFA. |
+
+### Privilege Escalation
+
+| **Tactic**             | **MITRE Technique**                              | **Simulated Test**                              | **Expected Detection**                                       |
+|------------------------|--------------------------------------------------|-------------------------------------------------|--------------------------------------------------------------|
+| **Privilege Escalation** | `T1078.003 – Valid Accounts: Local Accounts`  | Newly created user added to Administrators group | `index=* sourcetype="WinEventLog:Security" EventCode=4732`   |
+| **Detection Strategy**  | `DS0028 – Group Modification`                  | Monitor when users are added to privileged groups | Alert on EventCode `4732` with `Group Name=Administrators`   |
+| **Mitigation Strategy** | `M1018 – User Account Management`              | Regularly audit user accounts for activity and deactivate or remove any that are no longer needed.
 
 ---
 
@@ -35,7 +45,8 @@ This section provides a step-by-step breakdown of the work carried out in this S
 Generating security incidents to later analyse in Splunk. Overview of each security event and commands used.
 
 ### 1.1 Technique Overview
-A new administrator account is created, that also has a suspicious name. [T1098 - Account Manipulation](https://attack.mitre.org/techniques/T1098/)
+A new user account is created. [T1136.001 - Create Account: Local Account](https://attack.mitre.org/techniques/T1136/001/)
+The new user is added to the admin group. [T1078.003 - Valid Accounts: Local Accounts](https://attack.mitre.org/techniques/T1078/003/)
 
 ### 1.2 Simulating the security event - New Admin creation
 - In control panel, I navigated to User Accounts, User Accounts, Manage Accounts, and Add a user account
@@ -78,6 +89,8 @@ This allowed me to confirm that `system_admin`, the newly created user account, 
 
 <img width="1437" alt="image" src="https://github.com/user-attachments/assets/658a5430-38ee-4a0c-8d07-76bd56d6cd30" />
 
-### 2. Place holder
+### 2. Detection Strategy Overview
+To detect potential unauthorized administrator account creation, I implemented a detection strategy based on `MITRE ATT&CK’s DS0028 – Account Creation Monitoring`. This involved refining our SPL query and configuring a real-time alert in Splunk to monitor for the creation of new user accounts, particularly those that could indicate privilege escalation or persistence.
+
 
 
