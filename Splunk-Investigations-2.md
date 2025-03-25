@@ -89,8 +89,31 @@ This allowed me to confirm that `system_admin`, the newly created user account, 
 <img width="1437" alt="image" src="https://github.com/user-attachments/assets/658a5430-38ee-4a0c-8d07-76bd56d6cd30" />
 
 ### 2. Detection Strategy Overview
-For this scenario-based project, we are focusing on two different security concerns. A new user being added to the system, and a user being added to the group of Administrators. Based on these, I setup two different Splunk alerts, following closely recommended detection techniques: `DS0002 -  User Account Creation`, `DS0028 - User Account Authentication (Privilege Escalation)` 
+For this scenario-based project, we are focusing on two different security concerns. A new user being added to the system, and a user being added to the group of Administrators. Based on these, I setup two different Splunk alerts, following recommended detection techniques: `DS0002 -  User Account Creation`, `DS0028 - User Account Authentication (Privilege Escalation)` 
 
+### 2.1 Setting up Splunk Alerts
+Both Splunk alerts are configured to search the last 15 minutes of logs on a 5-minute schedule, ensuring any security events—such as new account creation or privilege escalation—are reliably detected.
 
+Alert 1 - Generates alerts on new user accounts being added to the system
+
+![image](https://github.com/user-attachments/assets/de54b185-c737-4de5-ae6c-cf30245639af)
+
+Alert 2 - Generates alerts when a user has been added to a security-enabled group. I.e. Admin
+
+![image](https://github.com/user-attachments/assets/19470ab7-0a5f-4782-b9f7-3969892507dc)
+
+### 2.2 Setting up Splunk Alerts
+To test our alerts, I created another system user and added them to the group Administrator. I will later remove and clean up these test-sample accounts.
+
+<img width="1122" alt="image" src="https://github.com/user-attachments/assets/385405ed-8780-4d14-b105-929ba5e31ba0" />
+
+This action successfully generated alerts, as shown below. Next, I setup a new dashboard.
+
+![image](https://github.com/user-attachments/assets/fa94b7ad-e024-49ab-b7cd-76428bf5d9b2)
+
+### 3. Setting up Dashboards
+
+### 4. Detecting user deletions
+As part of the clean up of this project, I went and removed any unnessary Administator accounts from our Windows Machine. However, this was a good chance to simulate and generate a new alert. Malicious actors using compromised accounts may tamper or delete existing users in the system. `DS0002 - User Account Deletion`
 
 
