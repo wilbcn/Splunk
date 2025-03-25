@@ -109,9 +109,56 @@ To test our alerts, I created another system user and added them to the group Ad
 
 This action successfully generated alerts, as shown below. Next, I setup a new dashboard.
 
-![image](https://github.com/user-attachments/assets/fa94b7ad-e024-49ab-b7cd-76428bf5d9b2)
+![image](https://github.com/user-attachments/assets/21b842c2-e4b2-4393-b2a2-a0dd04202763)
+
+![image](https://github.com/user-attachments/assets/0975eb12-fb7f-4a88-80b7-0be88a0a413f)
 
 ### 3. Setting up Dashboards
+To setup dashboards, I ran some further SPL searches, and saved them as dashboards. Dashboards offer rapid insight into security events, and allow us to correlate them. 
+
+Alert 1 - Recent User Account Creations
+
+```
+index=* sourcetype="WinEventLog:Security" EventCode=4720
+| table _time, host, Account_Name, Subject_Account_Name, Message
+| sort -_time
+```
+
+![image](https://github.com/user-attachments/assets/b550ba7f-f8b7-40b8-9efc-8fdb895afc86)
+
+Alert 2 - Users Added to Administrators Group
+
+```
+index=* sourcetype="WinEventLog:Security" EventCode=4732 Group_Name=Administrators
+| table _time, Subject_Account_Name, Message
+| sort -_time
+```
+
+
+Alert 3 - User Creation & Privilege Escalation Timeline
+
+```
+index=* sourcetype="WinEventLog:Security" (EventCode=4720 OR EventCode=4732)
+| timechart span=1h count by EventCode
+```
+
+
+Alert 4 - Top System Accounts Creating New Users
+
+```
+index=* sourcetype="WinEventLog:Security" EventCode=4720
+| stats count by Account_Name
+| sort -count
+```
+
+These 4 alerts were saved to our new dashboard!
+
+![image](https://github.com/user-attachments/assets/05f4d98d-ca51-4af3-a937-e156a9d5f54a)
+
+Snippet:
+
+![image](https://github.com/user-attachments/assets/ab5a115a-e71b-45ab-8e61-27a024471fcf)
+
 
 ### 4. Detecting user deletions
 As part of the clean up of this project, I went and removed any unnessary Administator accounts from our Windows Machine. However, this was a good chance to simulate and generate a new alert. Malicious actors using compromised accounts may tamper or delete existing users in the system. `DS0002 - User Account Deletion`
