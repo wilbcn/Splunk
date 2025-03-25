@@ -161,6 +161,27 @@ Snippet:
 
 
 ### 4. Detecting user deletions
-As part of the clean up of this project, I went and removed any unnessary Administator accounts from our Windows Machine. However, this was a good chance to simulate and generate a new alert. Malicious actors using compromised accounts may tamper or delete existing users in the system. `DS0002 - User Account Deletion`
+As part of the project clean-up phase, I removed unnecessary administrator accounts from the Windows machine. However, this provided an excellent opportunity to simulate and monitor for user deletions — a behavior that could be associated with adversarial activity. `DS0002 - User Account Deletion`
+
+I ran the below SPL query and saved it as an alert, which I then tested during the clean up phase.
+
+```
+index=* sourcetype="WinEventLog:Security" EventCode=4726
+```
+
+This successfully generated an alert to my email.
+
+![image](https://github.com/user-attachments/assets/695ecfdb-b078-4d45-b6e9-a1c45e6c4ae4)
+
+Filtering these events in Event Viewer.
+
+<img width="965" alt="image" src="https://github.com/user-attachments/assets/194ea172-0bb0-4c35-b858-52f1131e6bac" />
+
+### 5. Mitigation
+
+
+
+
+
 
 
