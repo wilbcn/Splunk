@@ -192,7 +192,7 @@ This project strengthened my practical understanding of Splunk by simulating una
 
 I also explored slightly more advanced SPL queries using `table`, `stats count`, and `timechart` to improve visibility and analysis of account activity. Integrating MITRE’s detection and mitigation strategies (DS0002, M1018, M1032) added realism and structure to this workflow.
 
-In upcoming projects, I aim to:
+In upcoming projects, I aim to do:
 - Continue expanding detection coverage with more MITRE-aligned techniques.
 - Integrate **Splunk** with **TheHive** for incident case management and enrichment.
 
