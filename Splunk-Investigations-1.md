@@ -225,7 +225,7 @@ While this project focused on securing sensitive files, it serves as a foundatio
 
 | **Project Focus** | **MITRE ATT&CK ID** | **Description** |
 |------------------|----------------------|------------------|
-| 🏴‍☠️ **[Detecting Unauthorised Admin Account Creation](https://github.com/wilbcn/Splunk/blob/main/Splunk-Investigations-2.md)** | `T1098 - Account Manipulation` | Monitor and alert when a new admin account is created. Get practice with building dashboards. |
+| 🏴‍☠️ **[Detecting Unauthorised Admin Account Creation](https://github.com/wilbcn/BlueTeam/blob/main/Splunk-Projects/Splunk-Investigations-2.md)** | `T1098 - Account Manipulation` | Monitor and alert when a new admin account is created. Get practice with building dashboards. |
 
 
 
